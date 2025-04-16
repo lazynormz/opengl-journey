@@ -1,3 +1,4 @@
+#include <vector>
 #include <glad/glad.h>
 #include <tiny_gltf.h>
 #include <glm/glm.hpp>
@@ -64,4 +65,44 @@ void Mesh::Draw()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+}
+
+void Mesh::SetupMesh()
+{
+    std::vector<Vertex> vertices = Interlace();
+
+    glBindVertexArray(m_VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, position));
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, normal));
+    glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, uv));
+    glEnableVertexAttribArray(2);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(unsigned int), m_indices.data(), GL_STATIC_DRAW);
+
+    glBindVertexArray(0);
+}
+
+std::vector<Vertex> Mesh::Interlace()
+{
+    std::vector<Vertex> vertices;
+    vertices.reserve(m_positions.size());
+
+    for (size_t index = 0; index < m_positions.size(); ++index)
+    {
+        Vertex vertex;
+        vertex.position = m_positions[index];
+        vertex.normal = m_normals[index];
+        vertex.uv = m_uvs[index];
+        vertices.push_back(vertex);
+    }
+
+    return vertices;
 }
