@@ -3,10 +3,12 @@
 #include <glad/glad.h>
 #include "game.hpp"
 #include "shaderProgram.hpp"
+#include "mesh.hpp"
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "gameState.hpp"
-
-unsigned int VBO, VAO;
 
 Game::Game()
 {
@@ -56,6 +58,12 @@ void Game::Init()
         return;
     }
 
+    glEnable(GL_DEPTH_TEST); // Enable depth testing
+    glEnable(GL_CULL_FACE);  // Enable backface culling
+
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f); // Set clear color
+    glViewport(0, 0, 600, 600);           // Set viewport
+
     m_running = true;
     m_shaderProgram = ShaderProgram();                                         // Initialize shader program
     m_shaderProgram.LoadShaders("shaders/shader.vert", "shaders/shader.frag"); // Load shaders
@@ -64,28 +72,9 @@ void Game::Init()
 
 void Game::Run()
 {
-    float testTri[] = {
-        -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f};
-
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(testTri), testTri, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
+    Mesh mesh;
+    mesh.LoadMesh("D:\\cpp\\fluid go swish\\test_elements\\cube.gltf"); // Load your model here
+    m_meshes.push_back(mesh);                                           // Add the mesh to the vector
     while (m_running)
     {
         SDL_Event event;
@@ -112,12 +101,16 @@ void Game::Update()
 
 void Game::Render()
 {
-    // TODO: Render game state
-    // For example, clear the screen, draw game objects, etc.
-    glClear(GL_COLOR_BUFFER_BIT);              // <--- YOU NEED THIS EVERY FRAME
-    glUseProgram(m_shaderProgram.m_programID); // Use the shader program (replace 0 with your shader program ID)
-    glBindVertexArray(VAO);                    // Bind the vertex array object (replace 0 with your VAO ID)
-    glDrawArrays(GL_TRIANGLES, 0, 3);          // Draw the triangle (replace 0 and 3 with your vertex array and count)
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // <--- YOU NEED THIS EVERY FRAME
+    m_shaderProgram.Use();
+    glm::mat4 model = glm::mat4(1.0f);                                                                                   // Identity matrix for model
+    glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Camera view matrix
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);                                    // Perspective projection matrix
+    m_shaderProgram.SetUniform("u_MVP", projection * view * model);                                                      // Set the MVP matrix uniform in the shader
+    for (auto &mesh : m_meshes)
+    {
+        mesh.Draw(); // Draw the mesh
+    }
     SDL_GL_SwapWindow(m_window);
 }
 

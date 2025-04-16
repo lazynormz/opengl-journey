@@ -49,7 +49,7 @@ namespace tinygltf
         }
     }
 
-    void ExtractIndices(std::vector<unsigned int> &out, const tinygltf::Model &model, const tinygltf::Primitive &primitives)
+    void ExtractIndices(std::vector<uint16_t> &out, const tinygltf::Model &model, const tinygltf::Primitive &primitives)
     {
         const auto &accessor = model.accessors[primitives.indices];
         const auto &view = model.bufferViews[accessor.bufferView];

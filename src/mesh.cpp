@@ -50,21 +50,15 @@ void Mesh::LoadMesh(const char *path)
     tinygltf::ExtractVec3("NORMAL", m_normals, model, primitive);
     tinygltf::ExtractVec2("TEXCOORD_0", m_uvs, model, primitive);
     tinygltf::ExtractIndices(m_indices, model, primitive);
+
+    SetupMesh(); // Setup the mesh buffers
 }
 
 void Mesh::Draw()
 {
     glBindVertexArray(m_VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
 
-    // Draw the mesh (not implemented in this example)
-    // For example, you can use glDrawElements or glDrawArrays to render the mesh.
-    // glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_indices.size()), GL_UNSIGNED_SHORT, 0);
 }
 
 void Mesh::SetupMesh()

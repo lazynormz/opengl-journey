@@ -4,7 +4,11 @@
 #include <string>
 #include <glad/glad.h>
 #include <SDL3/SDL_log.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include "shaderProgram.hpp"
+
+#include <iostream>
 
 ShaderProgram::ShaderProgram()
 {
@@ -75,23 +79,16 @@ void ShaderProgram::LoadShaders(const char *vertexPath, const char *fragmentPath
     if (!success)
     {
         glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
-        // Handle program linking error
     }
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
-    m_programID = shaderProgram; // Uncomment this line if you have a member variable to store the program ID
+    m_programID = shaderProgram;
 }
 
 void ShaderProgram::Use()
 {
-    // Use the shader program
     glUseProgram(m_programID);
-    // Set any default uniforms here if needed
-
-    // Example: SetUniform("someUniform", 1.0f);
-    // SetUniform("anotherUniform", 42);
-    // SetUniform("textureSampler", 0); // For texture samplers, set the texture unit
 }
 
 void ShaderProgram::SetUniform(const char *name, float value)
@@ -104,7 +101,7 @@ void ShaderProgram::SetUniform(const char *name, float value)
     }
     else
     {
-        // Handle error: uniform not found
+        printf("Uniform %s not found\n", name);
     }
 }
 
@@ -118,6 +115,20 @@ void ShaderProgram::SetUniform(const char *name, int value)
     }
     else
     {
-        // Handle error: uniform not found
+        printf("Uniform %s not found\n", name);
+    }
+}
+
+void ShaderProgram::SetUniform(const char *name, const glm::mat4 &value)
+{
+    int location = glGetUniformLocation(m_programID, name);
+    if (location != -1)
+    {
+        glUseProgram(m_programID); // Ensure the shader program is in use
+        glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+    }
+    else
+    {
+        printf("Uniform %s not found\n", name);
     }
 }
