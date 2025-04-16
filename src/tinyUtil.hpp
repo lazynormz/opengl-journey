@@ -16,15 +16,14 @@ namespace tinygltf
         const auto &view = model.bufferViews[accessor.bufferView];
         const auto &buffer = model.buffers[view.buffer];
 
-        const float *data = reinterpret_cast<const float *>(&buffer.data[view.byteOffset + accessor.byteOffset]);
+        const uint8_t *base = buffer.data.data() + view.byteOffset + accessor.byteOffset;
+
+        const size_t stride = view.byteStride ? view.byteStride : 3 * sizeof(float);
 
         for (size_t index = 0; index < accessor.count; index++)
         {
-            glm::vec3 vertex;
-            vertex.x = data[index * 3 + 0];
-            vertex.y = data[index * 3 + 1];
-            vertex.z = data[index * 3 + 2];
-            out.push_back(vertex);
+            const float *elem = reinterpret_cast<const float *>(base + index * stride);
+            out.emplace_back(elem[0], elem[1], elem[2]);
         }
     }
 
@@ -39,14 +38,14 @@ namespace tinygltf
         const auto &view = model.bufferViews[accessor.bufferView];
         const auto &buffer = model.buffers[view.buffer];
 
-        const float *data = reinterpret_cast<const float *>(&buffer.data[view.byteOffset + accessor.byteOffset]);
+        const uint8_t *base = buffer.data.data() + view.byteOffset + accessor.byteOffset;
+
+        const size_t stride = view.byteStride ? view.byteStride : 2 * sizeof(float);
 
         for (size_t index = 0; index < accessor.count; index++)
         {
-            glm::vec2 vertex;
-            vertex.x = data[index * 2 + 0];
-            vertex.y = data[index * 2 + 1];
-            out.push_back(vertex);
+            const float *elem = reinterpret_cast<const float *>(base + index * stride);
+            out.emplace_back(elem[0], elem[1]);
         }
     }
 
