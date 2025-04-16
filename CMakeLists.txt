@@ -26,6 +26,7 @@ set(HEADERS
     src/game.hpp
     src/shaderProgram.hpp
     src/mesh.hpp
+    src/tinyUtil.hpp
     src/gameState.hpp
 )
 

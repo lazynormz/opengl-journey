@@ -1,6 +1,8 @@
 #include <glad/glad.h>
 #include <tiny_gltf.h>
+#include <glm/glm.hpp>
 #include "mesh.hpp"
+#include "tinyUtil.hpp"
 
 Mesh::Mesh()
 {
@@ -39,6 +41,14 @@ void Mesh::LoadMesh(const char *path)
         printf("Failed to load glTF: %s\n", path);
         return;
     }
+
+    const auto &mesh = model.meshes[0];         // Assuming we want the first mesh
+    const auto &primitive = mesh.primitives[0]; // Assuming we want the first primitive
+
+    tinygltf::ExtractVec3("POSITION", m_positions, model, primitive);
+    tinygltf::ExtractVec3("NORMAL", m_normals, model, primitive);
+    tinygltf::ExtractVec2("TEXCOORD_0", m_uvs, model, primitive);
+    tinygltf::ExtractIndices(m_indices, model, primitive);
 }
 
 void Mesh::Draw()

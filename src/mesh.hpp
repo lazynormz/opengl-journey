@@ -2,6 +2,7 @@
 #define __MESH_HPP__
 
 #include <vector>
+#include <glm/glm.hpp>
 
 class Mesh
 {
@@ -14,9 +15,9 @@ public:
 
 private:                                 // Private Methods
 private:                                 // Private members
-    std::vector<float> m_vertices;       // Vertex data
-    std::vector<float> m_normals;        // Normal data
-    std::vector<float> m_texCoords;      // Texture coordinate data
+    std::vector<glm::vec3> m_positions;  // Vertex data
+    std::vector<glm::vec3> m_normals;    // Normal data
+    std::vector<glm::vec2> m_uvs;        // Texture coordinate data
     std::vector<unsigned int> m_indices; // Index data
 
     unsigned int m_VAO; // Vertex Array Object ID
