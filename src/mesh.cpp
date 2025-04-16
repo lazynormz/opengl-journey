@@ -21,7 +21,9 @@ void Mesh::LoadMesh(const char *path)
     tinygltf::Model model;
     tinygltf::TinyGLTF loader;
     std::string err, warn;
+
     bool ret = loader.LoadASCIIFromFile(&model, &err, &warn, path);
+
     if (!warn.empty())
     {
         printf("Warn: %s\n", warn.c_str());

@@ -39,6 +39,7 @@ add_library(glad STATIC
 )
 target_include_directories(glad PUBLIC ${GLAD_ROOT}/include)
 
+include_directories("D:/cpp-libs/glm-1.0.1")
 include_directories(${CMAKE_SOURCE_DIR}/external)
 
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS} ${CMAKE_SOURCE_DIR}/external/tiny_gltf.cc)
