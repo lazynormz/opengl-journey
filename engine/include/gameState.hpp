@@ -1,9 +1,12 @@
 #ifndef __GAME_STATE_HPP__
 #define __GAME_STATE_HPP__
 
-namespace GameState
+namespace Global
 {
-    float DeltaTime = 0.0f; // Time between current frame and last frame
+    namespace GameState
+    {
+        float DeltaTime = 0.0f; // Time between current frame and last frame
+    }
 }
 
 #endif // __GAME_STATE_HPP__

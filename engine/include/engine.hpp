@@ -6,7 +6,7 @@
 #include "shaderProgram.hpp"
 #include "mesh.hpp"
 
-namespace Engine
+namespace Core
 {
     class Engine
     {
@@ -25,7 +25,7 @@ namespace Engine
         SDL_Window *m_window;
         SDL_GLContext m_glContext;
         bool m_running;
-        ShaderProgram m_shaderProgram; // Shader program instance
+        Graphics::ShaderProgram m_shaderProgram; // Shader program instance
 
         std::vector<Mesh> m_meshes; // Vector of meshes
     };

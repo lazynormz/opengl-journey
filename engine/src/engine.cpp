@@ -14,7 +14,7 @@
 
 #include "gameState.hpp"
 
-namespace Engine
+namespace Core
 {
     Engine::Engine()
     {
@@ -71,14 +71,14 @@ namespace Engine
         glViewport(0, 0, 600, 600);           // Set viewport
 
         m_running = true;
-        m_shaderProgram = ShaderProgram();                                         // Initialize shader program
+        m_shaderProgram = Graphics::ShaderProgram();                               // Initialize shader program
         m_shaderProgram.LoadShaders("shaders/shader.vert", "shaders/shader.frag"); // Load shaders
         m_shaderProgram.Use();                                                     // Use the shader program
     }
 
     void Engine::Run()
     {
-        Mesh mesh;
+        Graphics::Mesh mesh;
         mesh.LoadMesh("D:\\cpp\\fluid go swish\\test_elements\\cube.gltf"); // Load your model here
         m_meshes.push_back(mesh);                                           // Add the mesh to the vector
         while (m_running)
@@ -91,7 +91,7 @@ namespace Engine
                     m_running = false;
                 }
             }
-            GameState::DeltaTime = SDL_GetTicks() / 1000.0f; // Update delta time
+            Global::GameState::DeltaTime = SDL_GetTicks() / 1000.0f; // Update delta time
             Update();
             Render();
         }
