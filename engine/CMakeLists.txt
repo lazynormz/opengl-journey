@@ -4,6 +4,7 @@ set(ENGINE_SOURCE
     src/engine.cpp
     src/mesh.cpp
     src/shaderProgram.cpp
+    src/camera.cpp
     external/tiny_gltf.cc
 )
 
@@ -13,6 +14,7 @@ set(ENGINE_HEADERS
     include/gameState.hpp
     include/shaderProgram.hpp
     include/tinyUtil.hpp
+    include/camera.hpp
     external/json.hpp
     external/tiny_gltf.h
 )

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <SDL3/SDL.h>
+#include <camera.hpp>
 #include "shaderProgram.hpp"
 #include "mesh.hpp"
 
@@ -26,8 +27,8 @@ namespace Core
         SDL_GLContext m_glContext;
         bool m_running;
         Graphics::ShaderProgram m_shaderProgram; // Shader program instance
-
-        std::vector<Mesh> m_meshes; // Vector of meshes
+        Graphics::Camera m_camera;               // Camera instance
+        std::vector<Graphics::Mesh> m_meshes;    // Vector of meshes
     };
 }
 

@@ -38,7 +38,7 @@ namespace Core
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-        m_window = SDL_CreateWindow("Hello SDL", 600, 600, SDL_WINDOW_OPENGL);
+        m_window = SDL_CreateWindow("Hello SDL", 1280, 720, SDL_WINDOW_OPENGL);
         if (m_window == nullptr)
         {
             SDL_Log("SDL_CreateWindow Error: %s", SDL_GetError());
@@ -68,12 +68,14 @@ namespace Core
         glEnable(GL_CULL_FACE);  // Enable backface culling
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f); // Set clear color
-        glViewport(0, 0, 600, 600);           // Set viewport
+        glViewport(0, 0, 1280, 720);          // Set viewport
 
         m_running = true;
         m_shaderProgram = Graphics::ShaderProgram();                               // Initialize shader program
         m_shaderProgram.LoadShaders("shaders/shader.vert", "shaders/shader.frag"); // Load shaders
         m_shaderProgram.Use();                                                     // Use the shader program
+
+        m_camera = Graphics::Camera(); // Initialize camera
     }
 
     void Engine::Run()
@@ -109,10 +111,10 @@ namespace Core
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // <--- YOU NEED THIS EVERY FRAME
         m_shaderProgram.Use();
-        glm::mat4 model = glm::mat4(1.0f);                                                                                   // Identity matrix for model
-        glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Camera view matrix
-        glm::mat4 projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);                                    // Perspective projection matrix
-        m_shaderProgram.SetUniform("u_MVP", projection * view * model);                                                      // Set the MVP matrix uniform in the shader
+        glm::mat4 model = glm::mat4(1.0f);                              // Identity matrix for model
+        glm::mat4 view = m_camera.GetViewMatrix();                      // Get the view matrix from the camera
+        glm::mat4 projection = m_camera.GetProjectionMatrix();          // Get the projection matrix from the camera
+        m_shaderProgram.SetUniform("u_MVP", projection * view * model); // Set the MVP matrix uniform in the shader
         for (auto &mesh : m_meshes)
         {
             mesh.Draw(); // Draw the mesh
