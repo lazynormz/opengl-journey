@@ -9,12 +9,19 @@ set(ENGINE_SOURCE
 )
 
 set(ENGINE_HEADERS
+    #Core
     include/engine.hpp
+    #Graphics
     include/mesh.hpp
-    include/gameState.hpp
     include/shaderProgram.hpp
-    include/tinyUtil.hpp
     include/camera.hpp
+    #Actor
+    include/gameObject.hpp
+    #Util
+    include/tinyUtil.hpp
+    #Global
+    include/gameState.hpp
+    #External
     external/json.hpp
     external/tiny_gltf.h
 )
