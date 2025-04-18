@@ -8,6 +8,7 @@
 #include "engine.hpp"
 #include "shaderProgram.hpp"
 #include "mesh.hpp"
+#include <gameObject.hpp>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -80,9 +81,6 @@ namespace Core
 
     void Engine::Run()
     {
-        Graphics::Mesh mesh;
-        mesh.LoadMesh("D:\\cpp\\fluid go swish\\test_elements\\cube.gltf"); // Load your model here
-        m_meshes.push_back(mesh);                                           // Add the mesh to the vector
         while (m_running)
         {
             SDL_Event event;
@@ -103,21 +101,23 @@ namespace Core
 
     void Engine::Update()
     {
-        // TODO: Update game state
-        // For example, handle input, update game objects, etc.
+        for (auto &gameObject : m_gameObjects)
+        {
+            gameObject->Update(); // Update each game object
+        }
     }
 
     void Engine::Render()
     {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // <--- YOU NEED THIS EVERY FRAME
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         m_shaderProgram.Use();
         glm::mat4 model = glm::mat4(1.0f);                              // Identity matrix for model
         glm::mat4 view = m_camera.GetViewMatrix();                      // Get the view matrix from the camera
         glm::mat4 projection = m_camera.GetProjectionMatrix();          // Get the projection matrix from the camera
         m_shaderProgram.SetUniform("u_MVP", projection * view * model); // Set the MVP matrix uniform in the shader
-        for (auto &mesh : m_meshes)
+        for (auto &gameObject : m_gameObjects)
         {
-            mesh.Draw(); // Draw the mesh
+            gameObject->Render(); // Draw the mesh
         }
         SDL_GL_SwapWindow(m_window);
     }
@@ -127,5 +127,10 @@ namespace Core
         SDL_GL_DestroyContext(m_glContext);
         SDL_DestroyWindow(m_window);
         SDL_Quit();
+    }
+
+    void Engine::RegisterGameObject(std::shared_ptr<Actor::GameObject> gameObject)
+    {
+        m_gameObjects.push_back(gameObject); // Add the game object to the vector
     }
 }

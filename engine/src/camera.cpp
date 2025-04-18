@@ -6,7 +6,7 @@ namespace Graphics
 {
     Camera::Camera()
     {
-        m_position = glm::vec3(0.0f, 0.0f, 3.0f); // Set initial camera position
+        m_position = glm::vec3(2.0f, 0.7f, 3.0f); // Set initial camera position
         m_target = glm::vec3(0.0f, 0.0f, 0.0f);   // Set initial camera target
         m_up = glm::vec3(0.0f, 1.0f, 0.0f);       // Set initial up vector
         m_fov = 45.0f;                            // Set initial field of view
